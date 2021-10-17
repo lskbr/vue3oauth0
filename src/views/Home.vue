@@ -4,15 +4,20 @@
     <HelloWorld msg="Welcome to Your Vue.js App" />
 
     <!-- Check that the SDK client is not currently loading before accessing is methods -->
-    LOGIN LOGIC
+    LOGIN {{$auth}} {{$auth.loading}}
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
       1
-      <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
+      <button v-if="$auth.isAuthenticated" @click="login">Log in</button>
       <!-- show logout when authenticated -->
       <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
+      <button @click="getToken">Get Token</button>
     </div>
     2
+    Token:
+    <p>{{token}}</p>
+    
+      
   </div>
 </template>
 
@@ -22,10 +27,25 @@ import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: "home",
+  
   components: {
     HelloWorld
   },
+  data() {
+    return {
+      token: "ELTOKEN"
+    };
+  }, 
   methods: {
+    created () {
+
+  },
+  async getToken(){
+    
+      //await this.$auth.getTokenSilently()
+      this.token = await this.$auth.getIdTokenClaims()
+    
+  },
     // Log the user in
     login() {
       this.$auth.loginWithRedirect();
